@@ -1,4 +1,5 @@
 import pygame
+import time
 
 class Player():
     def __init__(self, name):
@@ -9,8 +10,10 @@ class Player():
         self.attack = 30
         self.image = pygame.image.load("images/player.png")
         self.rect = self.image.get_rect()
-        self.rect.x = 450
-        self.rect.y = 450
+        self.rect.x = 200
+        self.rect.y = 350
+        self.mass = 80
+        self.gravity = 0
 
     def update_health_bar(self, surface):
         pygame.draw.rect(surface, (60, 63, 60), [self.rect.x + 65, self.rect.y - 20, self.max_health, 7])
@@ -23,3 +26,11 @@ class Player():
     def move_left(self):
         if self.rect.x > 0:
             self.rect.x -= self.velocity
+
+    def jump(self):
+        self.rect.y -= 1 
+
+    def fall(self):
+        self.rect.y += 1
+
+
