@@ -1,51 +1,62 @@
-import pygame 
-from player import Player
-import time
+import pygame
+from game import Game
+import os
 
-name="Thomas"
+pygame.init()
 
-pygame.display.set_caption("platformer game")
+
+#generer la fenetre de notre jeu
+pygame.display.set_caption("platformer")
 screen = pygame.display.set_mode((1280,720))
 
-#add pygame.NOFRAME for having no borders
-background = pygame.image.load("images/pixel_background.jpg")
+background = pygame.image.load("images/background.jpg")
 
-player = Player(name)
+#charger notre bouton pour lancer la partie
+play_button = pygame.image.load("images/play.jpg")
+play_button_rect = play_button.get_rect()
+play_button_rect.x, play_button_rect.y = 600, 300
 
-RIGHT_KEY = pygame.K_RIGHT
-LEFT_KEY = pygame.K_LEFT
-SPACE = pygame.K_SPACE
+#charger notre jeu
+game = Game()
 
-is_moving = False
 running = True
 
-while running: 
-    screen.blit(background, (0,0))
-    screen.blit(player.image, player.rect)
+#boucle tant que cette condition est vrai
+while running:
 
+    #appliquer l'arriere plan
+    screen.blit(background, (0, 0))
+
+    #verifier si notre jeu à commencé ou no
+    if game.is_playing:
+        #déclencher les instructions de la partie
+        game.update(screen)
+    else:
+        screen.blit(play_button, play_button_rect)
+
+    #mettre à jour l'écran
     pygame.display.flip()
 
+    #si le joueur ferme cette fenetre
     for event in pygame.event.get():
+        #que l'evenement est fermeture de fenetre
         if event.type == pygame.QUIT:
             running=False
             pygame.quit()
-
+        #detecter si un joueur lache une touche du clavier
         elif event.type == pygame.KEYDOWN:
-            if event.key == RIGHT_KEY:
-                is_moving = True
+            game.pressed[event.key] = True
 
-            elif event.key == LEFT_KEY:
-                is_moving = True
+            #detecter si la touche espace est enclenche pour lancer notre projectile
+            if event.key == pygame.K_SPACE:
+                game.player.launch_projectile()
+                game.player.increase_power()
 
-            elif event.key == SPACE:
-                player.jump()
-                
         elif event.type == pygame.KEYUP:
-            if event.key == RIGHT_KEY or event.key == LEFT_KEY:
-                is_moving = False
+            game.pressed[event.key] = False
 
-    if is_moving:
-        if pygame.key.get_pressed()[RIGHT_KEY]:
-            player.move_right()
-        elif pygame.key.get_pressed()[LEFT_KEY]:
-            player.move_left()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            #verification pour savoir si la souris est sur le bouton jouer
+            if play_button_rect.collidepoint(event.pos):
+                #mettre le jeu en mode "lancé"
+                game.start()
