@@ -21,7 +21,6 @@ class Game:
     def start(self):
         self.is_playing = True
         self.spawn_monster()
-        self.spawn_monster()
 
     def game_over(self):
         #remettre le jeu à neuf
@@ -54,7 +53,6 @@ class Game:
 
         # appliquer l'ensemble des images de mon groude de méchants
         self.all_monsters.draw(screen)
-        print(self.all_monsters)
 
     def check_collision(self, sprite, group):
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)

@@ -26,9 +26,8 @@ class Player(pygame.sprite.Sprite):
             #si le jouer na plus de vie
             self.game.game_over()
 
-    def increase_power(self):
-        if self.power < self.max_power:
-            self.power += 10
+    def decrease_power(self):
+        self.power = 0
 
     def update_health_bar(self, surface):
         #dessiner notre barre de vie
